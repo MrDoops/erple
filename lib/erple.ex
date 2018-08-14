@@ -6,7 +6,8 @@ defmodule Erple do
   This should fit the use case of any field-service type business that keeps inventory.
   If there's anything domain specific it's for b2b vendor concerns.
 
-  Current Focuses:
+  ## Current Focuses
+
     * Warehouse / Repo functionality
       - A repo might be a vehicle or a warehouse.
       - 'Warehouse' might be too strong a word for your use case. So lets keep naming flexible.
