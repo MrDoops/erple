@@ -4,7 +4,9 @@ defmodule Erple do
 
   These requirements are being derived for a small-medium sized residential Solar Company.
   This should fit the use case of any field-service type business that keeps inventory.
-  If there's anything domain specific it's for b2b vendor concerns.
+
+  It makes sense for inventory management solutions to be event-sourced because of the added auditablity.
+  Event-sourcing also happens to make applications both scalable and naturally compatible for blockchain integrations.
 
   ## Current Focuses
 
@@ -19,4 +21,47 @@ defmodule Erple do
       - Pricing / Price Books?
     * Orders? Purchase Orders?
   """
+  alias __MODULE__
+  alias Erple.Projections.{
+    Product,
+    InventoryItem,
+    Warehouse,
+    Repo,
+    Vehicle,
+  }
+  alias Erple.Commands.{
+    CreateProduct,
+    AddInventoryItems,
+    ActivateProduct,
+    DeactivateProduct,
+    SchedulePicklist,
+    TransferInventory,
+  }
+  alias Erple.Queries.{
+    AvailableInventory,
+    ActiveProducts,
+    PendingTransfers,
+    ScheduledPicklists,
+  }
+  alias Erple.{Repo, Router}
+
+  def add_product(%{} = attrs) do
+    add_product =
+      attrs
+      |> CreateProduct.new()
+      |> CreateProduct.assign_id()
+
+    with :ok <- Router.dispatch(add_product, consistency: :string) do
+      get(Product, add_product.id)
+    else
+      reply -> reply
+    end
+  end
+
+  defp get(schema, id) do
+    case Repo.get(schema, id) do
+      nil -> {:error, :not_found}
+      projection -> {:ok, projection}
+    end
+  end
 end

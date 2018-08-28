@@ -1,26 +1,30 @@
-# This file is responsible for configuring your application
-# and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-# This configuration is loaded before any dependency and is restricted
-# to this project. If another project depends on this project, this
-# file won't be loaded nor affect the parent project. For this reason,
-# if you want to provide default values for your application for
-# 3rd-party users, it should be done in your "mix.exs" file.
+config :erple, ecto_repos: [Erple.Repo]
 
-# You can configure your application as:
-#
-#     config :erple, key: :value
-#
-# and access this configuration in your application as:
-#
-#     Application.get_env(:erple, :key)
-#
-# You can also configure a 3rd-party app:
-#
-#     config :logger, level: :info
-#
-
+if Mix.env() == :dev do
+  config :mix_test_watch,
+    setup_tasks: ["ecto.reset"],
+    ansi_enabled: :ignore,
+    clear: true
+end
 
 import_config "#{Mix.env}.exs"
 
+# Configure the event store database
+config :eventstore, EventStore.Storage,
+  serializer: Commanded.Serialization.JsonSerializer,
+  username: "postgres",
+  password: "postgres",
+  database: "erple_eventstore_prod",
+  hostname: "localhost",
+  pool_size: 10
+
+# Configure the read store database
+config :erple, Erple.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "postgres",
+  password: "postgres",
+  database: "erple_readstore_prod",
+  hostname: "localhost",
+  pool_size: 15

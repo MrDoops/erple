@@ -10,6 +10,7 @@ defmodule Erple.Application do
     children = [
       # Starts a worker by calling: Erple.Worker.start_link(arg)
       # {Erple.Worker, arg},
+      {Erple.Repo, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
