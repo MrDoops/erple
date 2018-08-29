@@ -1,19 +1,13 @@
-
 use Mix.Config
 
-config(
-  :erple,
-  Erple.Repo,
-  [
-    adapter: Ecto.Adapters.Postgres,
-    database: "erple_readstore_test",
-    username: "postgres",
-    password: "postgres",
-    hostname: "localhost",
-    pool: Ecto.Adapters.SQL.Sandbox
-  ],
+config :erple, Erple.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  database: "erple_readstore_test",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 1
-)
 
 config :ex_unit, capture_log: true
 

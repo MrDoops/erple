@@ -5,8 +5,9 @@ defmodule Erple.MixProject do
   @version "0.1.0"
 
   @deps [
+    {:mix_test_watch, github: "aforward/mix-test.watch", only: :dev, runtime: false},
     {:commanded, "~> 0.17"},
-    {:commanded_eventstore_adapter, "~> 0.3"},
+    {:eventstore, "~> 0.15"},
     {:uuid, "~> 1.1"},
     {:ecto, "~> 2.1"},
     {:jason, "~> 1.1"},
@@ -36,7 +37,6 @@ defmodule Erple.MixProject do
     [
       extra_applications: [
         :logger,
-        :eventstore,
       ],
       mod: {Erple.Application, []}
     ]
