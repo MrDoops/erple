@@ -6,47 +6,51 @@ defmodule Erple.Aggregates.InventoryItem do
     :id,
     :name,
     :product_id,
-    :count,
+    :quantity,
   ]
 
   alias __MODULE__
   alias Erple.Commands.{
     CreateInventoryItem,
-    DeactivateInventoryItem,
     RenameInventoryItem,
     AddInventoryItems,
     RemoveInventoryItems,
   }
   alias Erple.Events.{
     InventoryItemCreated,
-    InventoryItemDeactivated,
     InventoryItemRenamed,
     InventoryItemsCheckedIn,
     InventoryItemsRemoved,
   }
 
-  def apply(%__MODULE__{} = item, %InventoryItemCreated{} = created) do
-    %__MODULE__{
+  def execute() do
+
+  end
+
+  def apply(%InventoryItem{} = item, %InventoryItemCreated{} = created) do
+    %InventoryItem{ item |
       id: created.id,
       name: created.name,
       product_id: created.product_id,
-      count: created.initial_count,
+      quantity: created.initial_count,
     }
   end
 
-  def apply(%InventoryItemDeactivated{} = deactivated) do
-
+  def apply(%InventoryItem{} = item, %InventoryItemRenamed{} = renamed) do
+    %InventoryItem{ item |
+      name: renamed.name,
+    }
   end
 
-  def apply(%InventoryItemRenamed{} = renamed) do
-
+  def apply(%InventoryItem{quantity: quantity} = item, %InventoryItemsCheckedIn{} = checked_in) do
+    %InventoryItem{ item |
+      quantity: quantity + checked_in.quantity,
+    }
   end
 
-  def apply(%InventoryItemsCheckedIn{} = checked_in) do
-
-  end
-
-  def apply(%InventoryItemsRemoved{} = removed) do
-
+  def apply(%InventoryItem{quantity: quantity} = item, %InventoryItemsRemoved{} = removed) do
+    %InventoryItem{ item |
+      quantity: quantity - removed.quantity,
+    }
   end
 end

@@ -6,4 +6,8 @@ defmodule Erple.Commands.CreateProduct do
     :product_code,
     :is_active,
   ]
+
+  def new() do
+
+  end
 end
